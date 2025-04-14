@@ -1,0 +1,33 @@
+name: proyectofinal
+description: "A new Flutter project."
+
+publish_to: 'none' 
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.1.0
+  provider: ^6.0.5
+  cached_network_image: ^3.2.3
+  google_maps_flutter: ^2.2.3
+  flutter_dotenv: ^5.0.2
+
+  carousel_slider: ^5.0.0
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  assets:
+    - lib/assets/Nagara.webp
+    - lib/assets/Roxas.jfif
+    - lib/assets/slider1.webp
+
+  uses-material-design: true
