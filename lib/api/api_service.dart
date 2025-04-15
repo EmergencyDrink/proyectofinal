@@ -6,8 +6,27 @@ class ApiService {
 
   // Métodos GET
   static Future<List<dynamic>> getNoticias() async {
-    final response = await http.get(Uri.parse('${_baseUrl}noticias.php'));
-    return _handleListResponse(response);
+    try {
+      final response = await http.get(
+        Uri.parse('${_baseUrl}noticias.php'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['exito'] == true) {
+          return data['datos'];
+        }
+        throw Exception(data['mensaje'] ?? 'Error desconocido');
+      } else {
+        throw Exception('Error HTTP ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error al cargar noticias: $e');
+    }
   }
 
   static Future<List<dynamic>> getAlbergues() async {
