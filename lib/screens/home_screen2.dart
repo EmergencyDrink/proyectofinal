@@ -166,3 +166,200 @@ class _HomeScreenState extends State<HomeScreen2> {
     );
   }
 }*/
+
+
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../api/api_service.dart';
+
+class HomeScreen2 extends StatefulWidget {
+  const HomeScreen2({super.key});
+
+  @override
+  State<HomeScreen2> createState() => _HomeScreen2State();
+}
+
+class _HomeScreen2State extends State<HomeScreen2> {
+  // Variables para el mapa
+  GoogleMapController? _mapController;
+  bool _isMapReady = false;
+  final Set<Marker> _markers = {};
+  LatLng _initialPosition = const LatLng(18.4861, -69.9312); // RD coordinates
+
+  // Variables para albergues
+  List<dynamic> _albergues = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAlbergues();
+  }
+
+  Future<void> _loadAlbergues() async {
+    try {
+      final data = await ApiService.getAlbergues();
+      setState(() {
+        _albergues = data;
+        _isLoading = false;
+      });
+      _updateMarkers();
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al cargar albergues: $e')),
+      );
+    }
+  }
+
+  void _updateMarkers() {
+    final markers = <Marker>{};
+    for (final albergue in _albergues) {
+      final lat = double.tryParse(albergue['latitud'] ?? '0') ?? 0;
+      final lng = double.tryParse(albergue['longitud'] ?? '0') ?? 0;
+      
+      if (lat != 0 && lng != 0) {
+        markers.add(
+          Marker(
+            markerId: MarkerId(albergue['id'] ?? 'marker_${markers.length}'),
+            position: LatLng(lat, lng),
+            infoWindow: InfoWindow(
+              title: albergue['nombre'] ?? 'Albergue',
+              snippet: albergue['ciudad'] ?? '',
+            ),
+          ),
+        );
+      }
+    }
+    setState(() {
+      _markers.clear();
+      _markers.addAll(markers);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Albergues - Mapa'),
+      ),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return Column(
+      children: [
+        Expanded(
+          child: _buildMap(),
+        ),
+        _buildAlberguesList(),
+      ],
+    );
+  }
+
+  Widget _buildMap() {
+    return GoogleMap(
+      onMapCreated: (controller) {
+        _mapController = controller;
+        setState(() => _isMapReady = true);
+      },
+      initialCameraPosition: CameraPosition(
+        target: _initialPosition,
+        zoom: 7,
+      ),
+      markers: _markers,
+      myLocationEnabled: true,
+      myLocationButtonEnabled: true,
+      onCameraIdle: () {
+        // Opcional: actualizar posición cuando el mapa deja de moverse
+      },
+    );
+  }
+
+  Widget _buildAlberguesList() {
+    return SizedBox(
+      height: 150,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: _albergues.length,
+        itemBuilder: (context, index) {
+          final albergue = _albergues[index];
+          return _buildAlbergueCard(albergue);
+        },
+      ),
+    );
+  }
+
+  Widget _buildAlbergueCard(Map<String, dynamic> albergue) {
+    final lat = double.tryParse(albergue['latitud'] ?? '0') ?? 0;
+    final lng = double.tryParse(albergue['longitud'] ?? '0') ?? 0;
+    final hasLocation = lat != 0 && lng != 0;
+
+    return GestureDetector(
+      onTap: () {
+        if (hasLocation && _isMapReady) {
+          _mapController?.animateCamera(
+            CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14),
+          );
+        }
+      },
+      child: Container(
+        width: 200,
+        margin: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              albergue['nombre'] ?? 'Albergue',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              albergue['ciudad'] ?? 'Ciudad no especificada',
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+            const Spacer(),
+            if (hasLocation)
+              Row(
+                children: [
+                  Icon(Icons.location_on, size: 16, color: Colors.blue),
+                  const SizedBox(width: 4),
+                  const Text('Ver en mapa', style: TextStyle(fontSize: 12)),
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _mapController?.dispose();
+    super.dispose();
+  }
+}

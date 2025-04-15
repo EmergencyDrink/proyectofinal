@@ -30,9 +30,17 @@ class ApiService {
   }
 
   static Future<List<dynamic>> getAlbergues() async {
-    final response = await http.get(Uri.parse('${_baseUrl}albergues.php'));
-    return _handleListResponse(response);
+  final response = await http.get(Uri.parse('${_baseUrl}albergues.php'));
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    if (data['exito'] == true) {
+      return data['datos'];
+    }
+    throw Exception(data['mensaje']);
+  } else {
+    throw Exception('Error ${response.statusCode}');
   }
+}
 
   static Future<List<dynamic>> getMedidas() async {
     final response = await http.get(Uri.parse('${_baseUrl}medidas_preventivas.php'));
