@@ -27,12 +27,19 @@ dev_dependencies:
 
 flutter:
   assets:
+
+    - lib/assets/Nagara.webp
+    - lib/assets/Roxas.jfif
+    - lib/assets/slider1.webp
+    - lib/assets/institucion.jpg
+
     - lib/assets/foto_aaron.jpg
     - lib/assets/Andy_Foto.jpg
     - lib/assets/defensa1.jpg
     - lib/assets/defensa2.jpg
     - lib/assets/defensa3.jpg
     - lib/assets/logo.jpg
+
 
   uses-material-design: true
 flutter_launcher_icons:
