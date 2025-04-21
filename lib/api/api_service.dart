@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:proyectofinal/api/models/servicio_model.dart';
 
 class ApiService {
   static const String _baseUrl = 'https://adamix.net/defensa_civil/def/';
@@ -130,6 +131,23 @@ static Future<Map<String, dynamic>> cambiarClave(String cedula, String clave) as
       return json.decode(response.body);
     } else {
       throw Exception('Error ${response.statusCode}');
+    }
+  }
+
+  static Future<List<Servicio>> fetchServicios() async {
+    final response = await http.get(Uri.parse('${_baseUrl}servicios.php'));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
+      if (data["exito"] == true) {
+        List serviciosJson = data["datos"];
+        return serviciosJson.map((json) => Servicio.fromJson(json)).toList();
+      } else {
+        throw Exception('Error en los datos de la API');
+      }
+    } else {
+      throw Exception('Fallo al conectarse a la API');
     }
   }
 }

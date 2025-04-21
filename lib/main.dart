@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:proyectofinal/screens/Login_screen.dart';
-import 'package:proyectofinal/screens/registro_page.dart';
 import 'package:proyectofinal/screens/registro_screen.dart';
 import '/screens/home_screen.dart';
 import 'package:proyectofinal/screens/recuperar_clave_page.dart';

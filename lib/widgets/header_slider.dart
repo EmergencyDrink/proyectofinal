@@ -11,9 +11,9 @@ class HeaderSlider extends StatefulWidget {
 class _HeaderSliderState extends State<HeaderSlider> {
   int _currentIndex = 0;
   final List<String> _images = [
-    'https://adamix.net/defensa_civil/img/slider1.jpg',
-    'https://adamix.net/defensa_civil/img/slider2.jpg',
-    'https://adamix.net/defensa_civil/img/slider3.jpg',
+    'lib/assets/defensa1.jpg', // Rutas corregidas (sin / inicial)
+    'lib/assets/defensa2.jpg',
+    'lib/assets/defensa3.jpg',
   ];
 
   @override
@@ -28,18 +28,18 @@ class _HeaderSliderState extends State<HeaderSlider> {
             viewportFraction: 1.0,
             onPageChanged: (index, _) => setState(() => _currentIndex = index),
           ),
-          items: _images.map((url) => _buildImageContainer(url)).toList(),
+          items: _images.map((imagePath) => _buildImageContainer(imagePath)).toList(),
         ),
         _buildIndicator(),
       ],
     );
   }
 
-  Widget _buildImageContainer(String url) {
+  Widget _buildImageContainer(String imagePath) {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: NetworkImage(url),
+          image: AssetImage(imagePath), // Usa AssetImage para imágenes locales
           fit: BoxFit.cover,
         ),
       ),

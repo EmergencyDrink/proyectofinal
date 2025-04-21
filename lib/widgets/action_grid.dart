@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:proyectofinal/screens/historia_screen.dart';
+import 'package:proyectofinal/screens/AcercaDe_screen.dart';
+import 'package:proyectofinal/screens/servicios_screen.dart';
+import 'package:proyectofinal/screens/video_screen.dart';
 import '/screens/albergues_screen.dart';
 import '/screens/medidas_screen.dart';
-import '/screens/registro_screen.dart';
 import '/screens/miembros_screen.dart';
 import '../../widgets/shared/custom_card.dart';
 
@@ -34,10 +36,10 @@ class ActionGrid extends StatelessWidget {
             targetScreen: MedidasScreen(),
           ),
           ActionButton(
-            icon: Icons.person_add,
+            icon: Icons.medical_services,
             color: Colors.green,
-            title: 'Voluntario',
-            targetScreen: RegistroScreen(),
+            title: 'Servicios',
+            targetScreen: ServiciosScreen(),
           ),
           ActionButton(
             icon: Icons.people,
@@ -46,10 +48,16 @@ class ActionGrid extends StatelessWidget {
             targetScreen: MiembrosScreen(),
           ),
           ActionButton(
-            icon: Icons.account_balance,
+            icon: Icons.menu_book, // Ícono representativo de historia
             color: Color.fromARGB(255, 1, 91, 91),
             title: 'Historia',
             targetScreen: BiografiaScreen(),
+          ),
+          ActionButton(
+            icon: Icons.people,
+            color: Color.fromARGB(255, 163, 154, 157),
+            title: 'Acerca De',
+            targetScreen: AcercadeScreen(),
           ),
         ],
       ),
