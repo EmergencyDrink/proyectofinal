@@ -18,6 +18,7 @@ dependencies:
   google_maps_flutter: ^2.12.1
   flutter_dotenv: ^5.0.2
   carousel_slider: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -31,5 +32,10 @@ flutter:
     - lib/assets/defensa1.jpg
     - lib/assets/defensa2.jpg
     - lib/assets/defensa3.jpg
+    - lib/assets/logo.jpg
 
   uses-material-design: true
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "lib/assets/logo.jpg" # ← tu imagen aquí

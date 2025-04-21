@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proyectofinal/screens/AcercaDe_screen.dart';
-import 'package:proyectofinal/screens/home_screen2.dart';
 import 'package:proyectofinal/screens/servicios_screen.dart';
+import 'package:proyectofinal/screens/video_screen.dart';
 import '/screens/albergues_screen.dart';
 import '/screens/medidas_screen.dart';
 
@@ -54,6 +54,8 @@ class ActionGrid extends StatelessWidget {
             title: 'Acerca De',
             targetScreen: AcercadeScreen(),
           ),
+       
+          
         ],
       ),
     );
