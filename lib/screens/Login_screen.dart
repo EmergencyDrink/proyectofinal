@@ -9,14 +9,14 @@ const kInputBorder = OutlineInputBorder(
   borderRadius: BorderRadius.all(Radius.circular(10)),
 );
 
-class HomeScreen2 extends StatefulWidget {
-  const HomeScreen2({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<HomeScreen2> createState() => _HomeScreen2State();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _HomeScreen2State extends State<HomeScreen2> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final cedulaController = TextEditingController();
   final claveController = TextEditingController();

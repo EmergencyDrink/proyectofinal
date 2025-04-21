@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proyectofinal/screens/home_screen2.dart';
+import 'package:proyectofinal/screens/Login_screen.dart';
 import 'package:proyectofinal/screens/registro_page.dart';
 import 'package:proyectofinal/screens/registro_screen.dart';
 import '/screens/home_screen.dart';
@@ -25,14 +25,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
        // 👇 Ruta inicial
-      initialRoute: '/home',
+      initialRoute: '/Login',
 
       // 👇 Todas las rutas registradas aquí
       routes: {
-        '/home': (context) => const HomeScreen(),
+        '/Login': (context) => const LoginScreen(),
         '/recuperar': (context) => const RecuperarClavePage(),
         '/cambiar': (context) => const CambiarClavePage(),
         '/registro': (context) => const RegistroScreen(),
+        '/home': (context) => const HomeScreen(),
       },
     );
   }
