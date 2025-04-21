@@ -11,9 +11,9 @@ class HeaderSlider extends StatefulWidget {
 class _HeaderSliderState extends State<HeaderSlider> {
   int _currentIndex = 0;
   final List<String> _images = [
-    'https://adamix.net/defensa_civil/img/slider1.jpg',
-    'https://adamix.net/defensa_civil/img/slider2.jpg',
-    'https://adamix.net/defensa_civil/img/slider3.jpg',
+    'lib/assets/defensa1.jpg',
+    'lib/assets/defensa2.jpg',
+    'lib/assets/defensa3.jpg',
   ];
 
   @override
