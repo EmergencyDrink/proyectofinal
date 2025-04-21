@@ -26,8 +26,7 @@ dev_dependencies:
 
 flutter:
   assets:
-    - lib/assets/Nagara.webp
-    - lib/assets/Roxas.jfif
-    - lib/assets/slider1.webp
+    - lib/assets/foto_aaron.jpg
+    - lib/assets/Andy_Foto.jpg
 
   uses-material-design: true

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:proyectofinal/screens/AcercaDe_screen.dart';
+import 'package:proyectofinal/screens/home_screen2.dart';
 import '/screens/albergues_screen.dart';
 import '/screens/medidas_screen.dart';
 import '/screens/registro_screen.dart';
@@ -43,6 +45,13 @@ class ActionGrid extends StatelessWidget {
             color: Colors.blue,
             title: 'Miembros',
             targetScreen: MiembrosScreen(),
+          ),
+
+          ActionButton(
+            icon: Icons.people,
+            color: Color.fromARGB(255, 163, 154, 157),
+            title: 'Acerca De',
+            targetScreen: AcercadeScreen(),
           ),
         ],
       ),
