@@ -76,19 +76,42 @@ class ApiService {
     return _handleResponse(response);
   }
 
-  static Future<Map<String, dynamic>> iniciarSesion({
-    required String cedula,
-    required String clave,
-  }) async {
+  static Future<Map<String, dynamic>> iniciarSesion(String cedula, String clave) async {
     final response = await http.post(
-      Uri.parse('${_baseUrl}iniciar_sesion.php'),
+      Uri.parse('$_baseUrl/iniciar_sesion.php'),
       body: {
         'cedula': cedula,
         'clave': clave,
       },
     );
-    return _handleResponse(response);
+
+    return jsonDecode(response.body);
   }
+
+  static Future<Map<String, dynamic>> recuperarClave(String cedula) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/recuperar_clave.php'),
+      body: {
+        'cedula': cedula,
+      },
+    );
+
+    return jsonDecode(response.body);
+  }
+
+static Future<Map<String, dynamic>> cambiarClave(String cedula, String clave) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/cambiar_clave.php'),
+      body: {
+        'cedula': cedula,
+        'clave': clave,
+      },
+    );
+
+    return jsonDecode(response.body);
+  }
+
+
 
   // Helpers
   static List<dynamic> _handleListResponse(http.Response response) {
