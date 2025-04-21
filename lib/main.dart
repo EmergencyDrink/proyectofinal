@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:proyectofinal/screens/home_screen2.dart';
 //import 'package:proyectofinal/screens/home_screen2.dart';
 import '/screens/home_screen.dart';
-import '/screens/home_screen2.dart';
-import 'package:proyectofinal/screens/recuperar_clave_page.dart';
-import 'package:proyectofinal/screens/cambiar_clave_page.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -22,19 +18,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      
+      home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
-       // 👇 Ruta inicial
-      initialRoute: '/home',
-
-      // 👇 Todas las rutas registradas aquí
-      routes: {
-        '/home': (context) => const HomeScreen2(),
-        '/recuperar': (context) => const RecuperarClavePage(),
-        '/cambiar': (context) => const CambiarClavePage(),
-      },
     );
-    
   }
-  
 }
