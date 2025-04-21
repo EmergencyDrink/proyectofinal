@@ -1,7 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '/api/api_service.dart';
+import '../api/api_service.dart';
 
 class AlberguesScreen extends StatefulWidget {
   const AlberguesScreen({super.key});
@@ -11,11 +10,11 @@ class AlberguesScreen extends StatefulWidget {
 }
 
 class _AlberguesScreenState extends State<AlberguesScreen> {
-  // ignore: unused_field
-  late GoogleMapController _mapController;
-  final Set<Marker> _markers = {};
   List<dynamic> _albergues = [];
   bool _isLoading = true;
+  String _errorMessage = '';
+  late GoogleMapController _mapController;
+  final Set<Marker> _markers = {};
 
   @override
   void initState() {
@@ -29,106 +28,182 @@ class _AlberguesScreenState extends State<AlberguesScreen> {
       setState(() {
         _albergues = albergues;
         _isLoading = false;
+        _updateMarkers();
       });
-      _updateMarkers();
     } catch (e) {
       setState(() {
+        _errorMessage = 'Error al cargar albergues: $e';
         _isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
     }
   }
 
   void _updateMarkers() {
     _markers.clear();
     for (final albergue in _albergues) {
-      final lat = double.tryParse(albergue['latitud'] ?? '0') ?? 0;
-      final lng = double.tryParse(albergue['longitud'] ?? '0') ?? 0;
+      final lat = double.tryParse(albergue['lat'] ?? '0') ?? 0;
+      final lng = double.tryParse(albergue['lng'] ?? '0') ?? 0;
       
       if (lat != 0 && lng != 0) {
         _markers.add(
           Marker(
-            markerId: MarkerId(albergue['id']),
+            markerId: MarkerId(albergue['id'] ?? ''),
             position: LatLng(lat, lng),
             infoWindow: InfoWindow(
-              title: albergue['nombre'],
-              snippet: albergue['ciudad'],
+              title: albergue['edificio'] ?? 'Albergue',
+              snippet: albergue['ciudad'] ?? '',
             ),
           ),
         );
       }
     }
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Albergues'),
+        title: const Text('Albergues Disponibles'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadAlbergues,
+          ),
+        ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Expanded(
-                  child: GoogleMap(
-                    onMapCreated: (controller) {
-                      _mapController = controller;
-                    },
-                    initialCameraPosition: const CameraPosition(
-                      target: LatLng(18.4861, -69.9312), // RD coordinates
-                      zoom: 8,
-                    ),
-                    markers: _markers,
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: _albergues.length,
-                    itemBuilder: (context, index) {
-                      final albergue = _albergues[index];
-                      return ListTile(
-                        title: Text(albergue['nombre']),
-                        subtitle: Text(albergue['ciudad']),
-                        onTap: () {
-                          _showAlbergueDetail(albergue);
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
+      body: _buildBody(),
     );
   }
 
-  void _showAlbergueDetail(Map<String, dynamic> albergue) {
-    showDialog(
+  Widget _buildBody() {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_errorMessage.isNotEmpty) {
+      return Center(child: Text(_errorMessage));
+    }
+
+    return Column(
+      children: [
+        _buildMapSection(),
+        _buildListSection(),
+      ],
+    );
+  }
+
+  Widget _buildMapSection() {
+    return SizedBox(
+      height: 250,
+      child: GoogleMap(
+        onMapCreated: (controller) => _mapController = controller,
+        initialCameraPosition: const CameraPosition(
+          target: LatLng(18.4861, -69.9312), // Coordenadas de RD
+          zoom: 7,
+        ),
+        markers: _markers,
+        myLocationEnabled: true,
+      ),
+    );
+  }
+
+  Widget _buildListSection() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: _albergues.length,
+        itemBuilder: (context, index) {
+          final albergue = _albergues[index];
+          return _buildAlbergueCard(albergue);
+        },
+      ),
+    );
+  }
+
+  Widget _buildAlbergueCard(Map<String, dynamic> albergue) {
+    return Card(
+      margin: const EdgeInsets.all(8),
+      child: ListTile(
+        leading: const Icon(Icons.home_work, color: Colors.blue),
+        title: Text(
+          albergue['edificio'] ?? 'Albergue sin nombre',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Ciudad: ${albergue['ciudad'] ?? 'No especificada'}'),
+            Text('Tel: ${albergue['telefono'] ?? 'N/A'}'),
+          ],
+        ),
+        onTap: () => _showAlbergueDetails(albergue),
+      ),
+    );
+  }
+
+  void _showAlbergueDetails(Map<String, dynamic> albergue) {
+    showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(albergue['nombre']),
-        content: SingleChildScrollView(
+      builder: (context) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Ciudad: ${albergue['ciudad']}'),
-              Text('Dirección: ${albergue['direccion']}'),
-              Text('Responsable: ${albergue['responsable']}'),
-              Text('Teléfono: ${albergue['telefono']}'),
-              Text('Capacidad: ${albergue['capacidad']}'),
+              const Text(
+                'Detalles del Albergue',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              _buildDetailRow(Icons.home, 'Nombre:', albergue['edificio']),
+              _buildDetailRow(Icons.location_city, 'Ciudad:', albergue['ciudad']),
+              _buildDetailRow(Icons.location_on, 'Dirección:', albergue['direccion']),
+              _buildDetailRow(Icons.phone, 'Teléfono:', albergue['telefono']),
+              _buildDetailRow(Icons.people, 'Capacidad:', albergue['capacidad']),
+              const SizedBox(height: 16),
+              if (albergue['lat'] != null && albergue['lng'] != null)
+                ElevatedButton(
+                  onPressed: () => _zoomToLocation(
+                    double.parse(albergue['lat']),
+                    double.parse(albergue['lng']),
+                  ),
+                  child: const Text('Ver en mapa'),
+                ),
             ],
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cerrar'),
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailRow(IconData icon, String label, String? value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(value ?? 'No disponible'),
+              ],
+            ),
           ),
         ],
       ),
     );
+  }
+
+  void _zoomToLocation(double lat, double lng) {
+    _mapController.animateCamera(
+      CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14),
+    );
+    Navigator.pop(context); // Cierra el bottom sheet
   }
 }
