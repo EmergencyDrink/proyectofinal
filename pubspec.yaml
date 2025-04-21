@@ -29,5 +29,6 @@ flutter:
     - lib/assets/Nagara.webp
     - lib/assets/Roxas.jfif
     - lib/assets/slider1.webp
+    - lib/assets/institucion.jpg
 
   uses-material-design: true
