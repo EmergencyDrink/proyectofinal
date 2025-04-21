@@ -4,7 +4,7 @@ import 'package:proyectofinal/screens/home_screen2.dart';
 import 'package:proyectofinal/screens/servicios_screen.dart';
 import '/screens/albergues_screen.dart';
 import '/screens/medidas_screen.dart';
-import '/screens/registro_screen.dart';
+
 import '/screens/miembros_screen.dart';
 import '../../widgets/shared/custom_card.dart';
 
