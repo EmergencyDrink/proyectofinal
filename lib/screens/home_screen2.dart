@@ -9,7 +9,6 @@ const kInputBorder = OutlineInputBorder(
   borderRadius: BorderRadius.all(Radius.circular(10)),
 );
 
-
 class HomeScreen2 extends StatefulWidget {
   const HomeScreen2({super.key});
 
@@ -36,6 +35,11 @@ class _HomeScreen2State extends State<HomeScreen2> {
         backgroundColor: response['exito'] == true ? Colors.green : Colors.red,
       ),
     );
+
+    // Si la respuesta es exitosa, redirige al home
+    if (response['exito'] == true) {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
   }
 
   @override
@@ -91,6 +95,12 @@ class _HomeScreen2State extends State<HomeScreen2> {
                         child: const Text("Iniciar Sesión"),
                       ),
                       TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/registro');
+                        },
+                        child: const Text('¿No tienes cuenta? Regístrate'),
+                      ),
+                      TextButton(
                         onPressed: () => Navigator.pushNamed(context, '/recuperar'),
                         child: const Text("¿Olvidaste tu clave?"),
                       ),
@@ -109,5 +119,3 @@ class _HomeScreen2State extends State<HomeScreen2> {
     );
   }
 }
-
-

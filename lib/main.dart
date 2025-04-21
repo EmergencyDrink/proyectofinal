@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:proyectofinal/screens/home_screen2.dart';
-//import 'package:proyectofinal/screens/home_screen2.dart';
+import 'package:proyectofinal/screens/registro_page.dart';
+import 'package:proyectofinal/screens/registro_screen.dart';
 import '/screens/home_screen.dart';
-import 'package:proyectofinal/screens/home_screen2.dart';
 import 'package:proyectofinal/screens/recuperar_clave_page.dart';
 import 'package:proyectofinal/screens/cambiar_clave_page.dart';
 
@@ -29,9 +29,10 @@ class MyApp extends StatelessWidget {
 
       // 👇 Todas las rutas registradas aquí
       routes: {
-        '/home': (context) => const HomeScreen2(),
+        '/home': (context) => const HomeScreen(),
         '/recuperar': (context) => const RecuperarClavePage(),
         '/cambiar': (context) => const CambiarClavePage(),
+        '/registro': (context) => const RegistroScreen(),
       },
     );
   }
